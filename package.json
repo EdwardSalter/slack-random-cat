@@ -19,5 +19,8 @@
   "homepage": "https://github.com/EdwardSalter/slack-random-cat#readme",
   "dependencies": {
     "express": "^4.14.0"
+  },
+  "engines": {
+    "node": "6.5.0"
   }
 }
