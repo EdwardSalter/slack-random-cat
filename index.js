@@ -31,7 +31,25 @@ function pipeCatImage(req, res, url) {
   req.pipe(connector);
 }
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
+  getRandomCatUrl((e) => {
+    console.log(`Error occured getting image url from cat api: ${e.message}`);
+    res.send('Error');
+  },(catImage) => {
+    let json = {
+      "attachments": [
+          {
+              "fallback": "A random cat",
+              "pretext": "Your random cat",
+              "image_url": catImage
+          }
+      ]
+    };
+    res.json(json);
+  });
+})
+
+app.get('/image', function (req, res) {
   getRandomCatUrl((e) => {
     console.log(`Error occured getting image url from cat api: ${e.message}`);
     res.send('Error');
