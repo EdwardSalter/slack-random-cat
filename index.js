@@ -6,6 +6,7 @@ const catApiKey = process.env.CAT_API_KEY;
 if (catApiKey) {
   catApiUrl += `&api_key=${catApiKey}`; // TODO: NOT STRING CONCATENATION
 }
+console.log(`The cat api url is ${catApiUrl}`);
 
 function getRandomCatUrl(err, done) {
   var req = http.get(catApiUrl, function(response) {
@@ -24,7 +25,7 @@ function pipeCatImage(req, res, url) {
     resp.pipe(res);
   });
   connector.on('error', (e) => {
-    console.log(`Error occured: ${e.message}`);
+    console.log(`Error occured piping cat image: ${e.message}`);
     res.send('Error');
   });
   req.pipe(connector);
@@ -32,7 +33,7 @@ function pipeCatImage(req, res, url) {
 
 app.get('/', function (req, res) {
   getRandomCatUrl((e) => {
-    console.log(`Error occured: ${e.message}`);
+    console.log(`Error occured getting image url from cat api: ${e.message}`);
     res.send('Error');
   },(catImage) => {
     pipeCatImage(req, res, catImage);
