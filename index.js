@@ -1,9 +1,14 @@
 const app = require('express')();
 const http = require('http');
 
+let catApiUrl = process.env.CAT_API_URL || 'http://thecatapi.com/api/images/get?format=src';
+const catApiKey = process.env.CAT_API_KEY;
+if (catApiKey) {
+  catApiUrl += `&api_key=${catApiKey}`; // TODO: NOT STRING CONCATENATION
+}
+
 function getRandomCatUrl(err, done) {
-  var req = http.get('http://thecatapi.com/api/images/get?format=src', function(response) {
-        console.log(response.headers.location);
+  var req = http.get(catApiUrl, function(response) {
         done(response.headers.location);
     });
 
@@ -34,6 +39,6 @@ app.get('/', function (req, res) {
   });
 });
 
-app.listen(3000, function () {
+app.listen(process.env.PORT || 3000, function () {
   console.log('Example app listening on port 3000!');
 });
