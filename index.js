@@ -34,7 +34,7 @@ function pipeCatImage(req, res, url) {
 app.get('/', function(req, res) {
   getRandomCatUrl((e) => {
     console.log(`Error occured getting image url from cat api: ${e.message}`);
-    res.send('Error');
+    res.status(500).send('Error');
   },(catImage) => {
     let json = {
       "response_type": "in_channel",
@@ -53,7 +53,7 @@ app.get('/', function(req, res) {
 app.get('/image', function (req, res) {
   getRandomCatUrl((e) => {
     console.log(`Error occured getting image url from cat api: ${e.message}`);
-    res.send('Error');
+    res.status(500).send('Error');
   },(catImage) => {
     pipeCatImage(req, res, catImage);
   });
