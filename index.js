@@ -37,6 +37,7 @@ app.get('/', function(req, res) {
     res.send('Error');
   },(catImage) => {
     let json = {
+      "response_type": "in_channel",
       "attachments": [
           {
               "fallback": "A random cat",
