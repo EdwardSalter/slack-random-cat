@@ -1,8 +1,10 @@
 const app = require('express')();
 const http = require('http');
 
-let catApiUrl = process.env.CAT_API_URL || 'http://thecatapi.com/api/images/get?format=src';
-const catApiKey = process.env.CAT_API_KEY;
+const config = require('./configuration');
+
+let catApiUrl = config.get("catApiUrl") || 'http://thecatapi.com/api/images/get?format=src';
+const catApiKey = config.get("catApiKey");
 if (catApiKey) {
   catApiUrl += `&api_key=${catApiKey}`; // TODO: NOT STRING CONCATENATION
 }
@@ -59,6 +61,8 @@ app.get('/image', function (req, res) {
   });
 });
 
-app.listen(process.env.PORT || 3000, function () {
-  console.log('Example app listening on port 3000!');
+
+const port = config.get("port", null, true);
+app.listen(port, function () {
+  console.log('slack-random-cat listening on port ' + port);
 });
