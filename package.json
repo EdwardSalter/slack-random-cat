@@ -1,27 +1,29 @@
 {
-    "name": "slack-random-cat",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "start": "node index.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/EdwardSalter/slack-random-cat.git"
-    },
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/EdwardSalter/slack-random-cat/issues"
-    },
-    "homepage": "https://github.com/EdwardSalter/slack-random-cat#readme",
-    "dependencies": {
-        "express": "^4.14.0",
-        "node-user-config": "git+https://github.com/EdwardSalter/node-user-config.git"
-    },
-    "engines": {
-        "node": "6.5.0"
-    }
+  "name": "slack-random-cat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdwardSalter/slack-random-cat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EdwardSalter/slack-random-cat/issues"
+  },
+  "homepage": "https://github.com/EdwardSalter/slack-random-cat#readme",
+  "dependencies": {
+    "append-query": "^1.1.0",
+    "express": "^4.14.0",
+    "node-user-config": "git+https://github.com/EdwardSalter/node-user-config.git",
+    "xml2js": "^0.4.17"
+  },
+  "engines": {
+    "node": "6.5.0"
+  }
 }
