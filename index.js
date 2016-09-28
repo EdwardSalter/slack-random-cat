@@ -22,19 +22,34 @@ function getApiUrl(path, queryParams) {
     return fullPath;
 }
 
-function getRandomCatUrl(err, done) {
+function getRandomCatUrl(category, err, done) {
     let imageUrl = getApiUrl('images/get');
-    console.log(`Making request to ${imageUrl}`);
+    let func = () => {
+        console.log(`Making request to ${imageUrl}`);
 
-    let req = http.get(imageUrl, function(response) {
-        done(response.headers.location);
-    });
+        let req = http.get(imageUrl, function(response) {
+            done(response.headers.location);
+        });
 
-    req.on('error', (e) => {
-      err(e);
-    });
+        req.on('error', (e) => {
+          err(e);
+        });
+    }
 
-    return req;
+
+    if (category) {
+        getCatCategories(err, (categories) => {
+            if (categories.indexOf(category) === -1) {
+                err(new Error(`Category is not in the valid list. Choose from: ${categories.join(', ')}.`));
+                return;
+            }
+
+            imageUrl = appendQuery(imageUrl, { category: category });
+            func();
+        });
+    } else {
+        func();
+    }
 }
 
 function getCatCategories(err, done) {
@@ -60,7 +75,7 @@ function getCatCategories(err, done) {
     });
 
     req.on('error', (e) => {
-    err(e);
+        err(e);
     });
 
     return req;
@@ -86,7 +101,7 @@ app.get('/', function(req, res) {
         case 'categories':
             getCatCategories((e) => {
               console.log(`Error occured getting category list from cat api: ${e.message}`);
-              res.status(500).send('Error');
+              res.status(500).send(e.message);
           }, (categories) => {
               let json = {
                 "response_type": "ephemeral",
@@ -97,9 +112,9 @@ app.get('/', function(req, res) {
             break;
 
         default:
-            getRandomCatUrl((e) => {
+            getRandomCatUrl(command, (e) => {
               console.log(`Error occured getting image url from cat api: ${e.message}`);
-              res.status(500).send('Error');
+              res.status(500).send(e.message);
             },(catImage) => {
               let json = {
                 "response_type": "in_channel",
@@ -120,7 +135,7 @@ app.get('/', function(req, res) {
 app.get('/image', function (req, res) {
   getRandomCatUrl((e) => {
     console.log(`Error occured getting image url from cat api: ${e.message}`);
-    res.status(500).send('Error');
+    res.status(500).send(e.message);
   },(catImage) => {
     pipeCatImage(req, res, catImage);
   });
