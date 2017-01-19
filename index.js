@@ -133,7 +133,7 @@ app.get('/', function(req, res) {
 })
 
 app.get('/image', function (req, res) {
-  getRandomCatUrl((e) => {
+  getRandomCatUrl(null, (e) => {
     console.log(`Error occured getting image url from cat api: ${e.message}`);
     res.status(500).send(e.message);
   },(catImage) => {
@@ -142,18 +142,14 @@ app.get('/image', function (req, res) {
 });
 
 app.post('/', function(req, res) {
-    getRandomCatUrl(null, (e) => {
-      console.log(`Error occured getting image url from cat api: ${e.message}`);
-      res.status(500).send(e.message);
-    },(catImage) => {
-      let json = {
-            "message": "<img src=\"" + catImage + "\" />",
-            "notify": true,
-            "message_format": "html"
-        };
+    const fullUrl = req.protocol + '://' + req.get('host') + '/image';
+    let json = {
+        "message": "<img src=\"" + fullUrl + "\" />",
+        "notify": true,
+        "message_format": "html"
+    };
 
-      res.json(json);
-    });
+  res.json(json);
 });
 
 
