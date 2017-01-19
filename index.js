@@ -141,6 +141,18 @@ app.get('/image', function (req, res) {
   });
 });
 
+app.post('/', function(req, res) {
+        const fullUrl = req.protocol + '://' + req.get('host') + "/image";
+
+        const json = {
+           "message": "<img src=\"" + fullUrl + "\" />",
+           "notify": true,
+           "message_format": "html"
+       };
+
+     res.json(json);
+});
+
 
 const port = config.get("port", null, true);
 app.listen(port, function () {
