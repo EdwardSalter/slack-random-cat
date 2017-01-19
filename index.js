@@ -22,13 +22,26 @@ function getApiUrl(path, queryParams) {
     return fullPath;
 }
 
-function getRandomCatUrl(category, err, done) {
-    let imageUrl = getApiUrl('images/get');
+function getRandomCat(category, err, done) {
+    let imageUrl = getApiUrl('images/get', { format: 'xml' });
     let func = () => {
         console.log(`Making request to ${imageUrl}`);
-
         let req = http.get(imageUrl, function(response) {
-            done(response.headers.location);
+            var body = '';
+            response.on('data', function(d) {
+                body += d;
+            });
+            response.on('end', function() {
+                xml.parseString(body, (err, parsedXml) => {
+                  let cat = parsedXml.response.data[0].images[0].image[0];
+                  cat.url = cat.url[0]
+                  done(cat);
+                });
+            });
+        });
+
+        req.on('error', (e) => {
+            err(e);
         });
 
         req.on('error', (e) => {
@@ -82,6 +95,7 @@ function getCatCategories(err, done) {
 }
 
 function pipeCatImage(req, res, url) {
+  console.log(url)
   var connector = http.get(url, (resp) => {
     resp.pipe(res);
   });
@@ -112,7 +126,7 @@ app.get('/', function(req, res) {
             break;
 
         default:
-            getRandomCatUrl(command, (e) => {
+            getRandomCat(command, (e) => {
               console.log(`Error occured getting image url from cat api: ${e.message}`);
               res.status(500).send(e.message);
             },(catImage) => {
@@ -122,7 +136,7 @@ app.get('/', function(req, res) {
                     {
                         "fallback": "A random cat",
                         "pretext": "Your random cat",
-                        "image_url": catImage
+                        "image_url": catImage.url
                     }
                 ]
               };
@@ -133,11 +147,11 @@ app.get('/', function(req, res) {
 })
 
 app.get('/image', function (req, res) {
-  getRandomCatUrl(null, (e) => {
+  getRandomCat(null, (e) => {
     console.log(`Error occured getting image url from cat api: ${e.message}`);
     res.status(500).send(e.message);
   },(catImage) => {
-    pipeCatImage(req, res, catImage);
+    pipeCatImage(req, res, catImage.url);
   });
 });
 
@@ -153,7 +167,7 @@ app.post('/', function(req, res) {
 });
 
 
-const port = config.get("port", null, true);
+const port = config.get("port", null, false) || 3000;
 app.listen(port, function () {
   console.log('slack-random-cat listening on port ' + port);
 });
