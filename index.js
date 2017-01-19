@@ -17,13 +17,14 @@ function getApiUrl(path, queryParams) {
         fullPath = appendQuery(fullPath, { api_key: catApiKey });
     }
     if (queryParams) {
+        if (!queryParams.image_id) delete queryParams.image_id;
         fullPath = appendQuery(fullPath, queryParams);
     }
     return fullPath;
 }
 
-function getRandomCat(category, err, done) {
-    let imageUrl = getApiUrl('images/get', { format: 'xml' });
+function getRandomCat(category, id, err, done) {
+    let imageUrl = getApiUrl('images/get', { format: 'xml', image_id: id });
     let func = () => {
         console.log(`Making request to ${imageUrl}`);
         let req = http.get(imageUrl, function(response) {
@@ -126,7 +127,7 @@ app.get('/', function(req, res) {
             break;
 
         default:
-            getRandomCat(command, (e) => {
+            getRandomCat(command, null, (e) => {
               console.log(`Error occured getting image url from cat api: ${e.message}`);
               res.status(500).send(e.message);
             },(catImage) => {
@@ -146,8 +147,8 @@ app.get('/', function(req, res) {
     }
 })
 
-app.get('/image', function (req, res) {
-  getRandomCat(null, (e) => {
+app.get('/image/:id?', function (req, res) {
+  getRandomCat(null, req.params.id, (e) => {
     console.log(`Error occured getting image url from cat api: ${e.message}`);
     res.status(500).send(e.message);
   },(catImage) => {
@@ -156,14 +157,19 @@ app.get('/image', function (req, res) {
 });
 
 app.post('/', function(req, res) {
-    const fullUrl = req.protocol + '://' + req.get('host') + '/image';
-    let json = {
-        "message": "<img src=\"" + fullUrl + "\" />",
-        "notify": true,
-        "message_format": "html"
-    };
+  getRandomCat(null, null, (e) => {
+    console.log(`Error occured getting image url from cat api: ${e.message}`);
+    res.status(500).send(e.message);
+  },(catImage) => {
+      const fullUrl = req.protocol + '://' + req.get('host') + '/image/' + catImage.id;
+      let json = {
+          "message": "<img src=\"" + fullUrl + "\" />",
+          "notify": true,
+          "message_format": "html"
+      };
 
-  res.json(json);
+    res.json(json);
+  });
 });
 
 
