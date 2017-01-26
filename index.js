@@ -24,7 +24,7 @@ function getApiUrl(path, queryParams) {
 }
 
 function getRandomCat(category, id, err, done) {
-    let imageUrl = getApiUrl('images/get', { format: 'xml', image_id: id });
+    let imageUrl = getApiUrl('images/get', { format: 'xml', image_id: id, size: 'small' });
     let func = () => {
         console.log(`Making request to ${imageUrl}`);
         let req = http.get(imageUrl, function(response) {
