@@ -10,6 +10,20 @@ let catApiUrl = config.get("catApiUrl") || 'http://thecatapi.com/api/';
 const catApiKey = config.get("catApiKey");
 console.log(`The cat api base url is ${catApiUrl}`);
 
+function checkUrlExists(href,cb) {
+  var options = {
+          method: 'HEAD',
+          host: url.parse(href).host,
+          port: 80,
+          path: url.parse(href).pathname
+      };
+      console.log(`Checking if ${href} is valid`);
+    http.request(options, (r) => {
+        const isValid = r.statusCode >= 200 && r.statusCode < 400;
+        console.log(isValid ? 'It is' : 'It is not');
+        cb(null,  isValid);
+    }).on('error', cb).end();
+}
 
 function getApiUrl(path, queryParams) {
     let fullPath = url.resolve(catApiUrl, path);
@@ -24,7 +38,7 @@ function getApiUrl(path, queryParams) {
 }
 
 function getRandomCat(category, id, err, done) {
-    let imageUrl = getApiUrl('images/get', { format: 'xml', image_id: id, size: 'small' });
+    let imageUrl = getApiUrl('images/get', { format: 'xml', image_id: id, size: 'small', results_per_page: 5 });
     let func = () => {
         console.log(`Making request to ${imageUrl}`);
         let req = http.get(imageUrl, function(response) {
@@ -33,10 +47,25 @@ function getRandomCat(category, id, err, done) {
                 body += d;
             });
             response.on('end', function() {
-                xml.parseString(body, (err, parsedXml) => {
+                xml.parseString(body, (error, parsedXml) => {
                   let cat = parsedXml.response.data[0].images[0].image[0];
-                  cat.url = cat.url[0]
-                  done(cat);
+                  cat.url = cat.url[0];
+
+                  var cb = function(e, isValid) {
+                    if (e) {
+                      console.log('I have erorred here');
+                      err(e);
+                      return;
+                    }
+                    if (isValid)
+                      done(cat);
+                    else {
+                      console.log('Cat image does not exist');
+                      err('Cat image not valid')
+                    }
+                  }
+                  checkUrlExists(cat.url, cb);
+
                 });
             });
         });
