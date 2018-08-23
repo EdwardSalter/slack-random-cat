@@ -3,7 +3,6 @@ import * as http from "http";
 import express from "express";
 import config from "./configuration";
 import { urlencoded } from "body-parser";
-import bluebird from "bluebird";
 import sendSlackResponse from "./SlackResponse";
 
 const app = express();
@@ -40,7 +39,7 @@ app.post("/", async function(req, res) {
 function formatImageMessage(image) {
   return {
     response_type: "in_channel",
-    attachment: [
+    attachments: [
       {
         fallback: "A random cat",
         pretext: "Your random cat",
