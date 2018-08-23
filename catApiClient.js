@@ -1,3 +1,4 @@
+import { URL, URLSearchParams } from "url";
 import fetch from "node-fetch";
 import config from "./configuration";
 
