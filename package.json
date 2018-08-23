@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "node index.js",
+        "start": "babel-node index.js",
+        "dev": "nodemon --exec babel-node --preset=env index.js",
         "test": "echo \"Error: no test specified\" && exit 0"
     },
     "repository": {
@@ -18,12 +19,20 @@
     },
     "homepage": "https://github.com/EdwardSalter/slack-random-cat#readme",
     "dependencies": {
-        "append-query": "^1.1.0",
+        "append-query": "^2.0.1",
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
+        "bluebird": "^3.5.1",
+        "body-parser": "^1.18.3",
         "express": "^4.14.0",
-        "node-user-config": "^0.1.0",
-        "xml2js": "^0.4.17"
+        "node-fetch": "^2.2.0",
+        "node-user-config": "^0.1.0"
     },
     "engines": {
         "node": "6.5.0"
+    },
+    "devDependencies": {
+        "nodemon": "^1.18.3",
+        "prettier": "^1.14.2"
     }
 }
