@@ -10,6 +10,8 @@ var fetch = _interopDefault(require("node-fetch"));
 var Promise = _interopDefault(require("bluebird"));
 var express = _interopDefault(require("express"));
 var bodyParser = require("body-parser");
+var botbuilder = require("botbuilder");
+require("botbuilder-teams");
 
 const catApiKey = config.get("catApiKey");
 
@@ -113,8 +115,40 @@ async function sendSlackResponse(messagePromise, responseUrl) {
   return Promise.race([timeout, messagePromise]);
 }
 
+const adapter = new botbuilder.BotFrameworkAdapter({
+  appId: "2b843ff4-73e6-48d0-8026-63f3c75117fd",
+  appPassword: "hmHMOG4935+eivtmYKP3][}"
+});
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
+
+adapter.onTurnError = async (context, error) => {
+  // This check writes out errors to console log .vs. app insights.
+  console.error(`\n [onTurnError]: ${error}`);
+  // Send a message to the user
+  context.sendActivity(`Oops. Something went wrong!`);
+  // Clear out state
+  await conversationState.clear(context);
+  // Save state changes.
+  await conversationState.saveChanges(context);
+};
+
+let conversationState;
+
+// For local development, in-memory storage is used.
+// CAUTION: The Memory Storage used here is for local bot debugging only. When the bot
+// is restarted, anything stored in memory will be gone.
+const memoryStorage = new botbuilder.MemoryStorage();
+conversationState = new botbuilder.ConversationState(memoryStorage);
+
+app.post("/api/messages", (req, res) => {
+  console.log("message recieved");
+  adapter.processActivity(req, res, async context => {
+    // route to main dialog.
+    await bot.onTurn(context);
+  });
+});
 
 // function pipeCatImage(req, res, url) {
 //   console.log(url);
