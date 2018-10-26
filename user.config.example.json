@@ -1,4 +1,8 @@
 {
     "catApiKey": "xxxxxxxx",
-    "port": "3000"
+    "port": "3000",
+    "azureBotFramework": {
+        "appId": "xxxx-xxxx",
+        "appPassword": "xxxxx"
+    }
 }

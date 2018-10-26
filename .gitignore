@@ -38,3 +38,5 @@ jspm_packages
 
 user.config.json
 index.js
+
+.idea/workspace.xml

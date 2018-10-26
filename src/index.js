@@ -1,35 +1,23 @@
 import { searchImages } from "./catApiClient";
-// import * as http from "http";
-import express from "express";
 import config from "./configuration";
-import { urlencoded } from "body-parser";
-import sendSlackResponse from "./SlackResponse";
 import restify from "restify";
-import {
-  BotFrameworkAdapter,
-  ConversationState,
-  MemoryStorage
-} from "botbuilder";
-import { TeamsChatConnector } from "botbuilder-teams";
+import { BotFrameworkAdapter } from "botbuilder";
+
+const botFrameworkConfig = config.get("azureBotFramework");
 
 const adapter = new BotFrameworkAdapter({
-  appId: "22981a2f-e56e-435a-878f-2b19fedb84a7",
-  appPassword: "dpvQHFSJ04@bivrNK054-$]"
+  appId: botFrameworkConfig.appId,
+  appPassword: botFrameworkConfig.appPassword
 });
 
 // const app = express();
 // app.use(urlencoded({ extended: true }));
 
 // Create HTTP server
-let server = restify.createServer();
-server.listen(process.env.port || process.env.PORT || 4000, function() {
+const port = config.get("port", null, false) || 4000;
+const server = restify.createServer();
+server.listen(port, function() {
   console.log(`\n${server.name} listening to ${server.url}`);
-  console.log(
-    `\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`
-  );
-  console.log(
-    `\nTo talk to your bot, open echoBot-with-counter.bot file in the Emulator`
-  );
 });
 
 // Listen for incoming activities and route them to your bot main dialog.
