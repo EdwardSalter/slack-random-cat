@@ -13,8 +13,8 @@ import {
 import { TeamsChatConnector } from "botbuilder-teams";
 
 const adapter = new BotFrameworkAdapter({
-  appId: "2b843ff4-73e6-48d0-8026-63f3c75117fd",
-  appPassword: "hmHMOG4935+eivtmYKP3][}"
+  appId: "22981a2f-e56e-435a-878f-2b19fedb84a7",
+  appPassword: "dpvQHFSJ04@bivrNK054-$]"
 });
 
 // const app = express();
