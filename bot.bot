@@ -1,15 +1,18 @@
 {
     "name": "echobot-with-counter",
+    "description": "",
     "services": [
         {
             "type": "endpoint",
-            "name": "development",
-            "endpoint": "http://localhost:4000/api/messages",
             "appId": "22981a2f-e56e-435a-878f-2b19fedb84a7",
             "appPassword": "dpvQHFSJ04@bivrNK054-$]",
-            "id": "1"
+            "endpoint": "http://localhost:3000/api/messages",
+            "id": "1",
+            "name": "development"
         }
     ],
     "padlock": "",
-    "version": "2.0"
+    "version": "2.0",
+    "overrides": null,
+    "path": "C:\\Development\\Other\\slack-random-cat\\bot.bot"
 }

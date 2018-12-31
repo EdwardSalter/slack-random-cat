@@ -4,6 +4,7 @@
     "description": "",
     "main": "src/index.js",
     "scripts": {
+        "prestart": "npm run build",
         "start": "node index.js",
         "dev": "nodemon --exec babel-node --preset=env src/index.js",
         "build": "rollup -i src/index.js -o index.js -f cjs"
