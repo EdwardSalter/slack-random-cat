@@ -68,9 +68,12 @@ async function getImage() {
   return message;
 }
 
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
 // Slack command
 server.post("/", async function(req, res) {
-  const message = await sendSlackResponse(getImage(), req.body.response_url);
+  console.log(req);
+  const message = await sendSlackResponse(getImage(), req.params.response_url);
 
   console.debug("Got a message to send", message);
 
